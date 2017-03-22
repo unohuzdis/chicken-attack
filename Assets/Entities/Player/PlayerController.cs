@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour {
 	
 	float xmin;
 	float xmax;
+  float ymin;
+  float ymax;
 	
 	void OnTriggerEnter2D(Collider2D collider){
 		Projectile missile = collider.gameObject.GetComponent<Projectile>();
@@ -37,7 +39,12 @@ public class PlayerController : MonoBehaviour {
 		Vector3 rightmost = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
 		xmin = leftmost.x + padding;
 		xmax = rightmost.x - padding;
-	}
+
+    Vector3 downmost = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance));
+    Vector3 upmost = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, distance));
+    ymin = downmost.y + padding;
+    ymax = upmost.y - padding;
+  }
 	
 	void Fire(){
 		GameObject beam = Instantiate(projectile, transform.position, Quaternion.identity) as GameObject;
@@ -56,12 +63,18 @@ public class PlayerController : MonoBehaviour {
 			transform.position += Vector3.left * speed * Time.deltaTime;
 		}else if (Input.GetKey(KeyCode.RightArrow)){
 			transform.position += Vector3.right * speed * Time.deltaTime; 
-		}
+		} else if (Input.GetKey(KeyCode.UpArrow)) {
+      transform.position += Vector3.up * speed * Time.deltaTime;
+    } else if (Input.GetKey(KeyCode.DownArrow)) {
+      transform.position += Vector3.down * speed * Time.deltaTime;
+    }
 		
 		// restrict the player to the gamespace
 		float newX = Mathf.Clamp(transform.position.x, xmin, xmax);
-		transform.position = new Vector3(newX, transform.position.y, transform.position.z);
-	}
+
+    float newY = Mathf.Clamp(transform.position.y, ymin, ymax);
+    transform.position = new Vector3(newX, newY, transform.position.z);
+  }
 	
 	
 	
