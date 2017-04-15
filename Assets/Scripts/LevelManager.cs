@@ -6,6 +6,9 @@ public class LevelManager : MonoBehaviour {
 	public void LoadLevel(string name){
 		Debug.Log ("New Level load: " + name);
 		Application.LoadLevel (name);
+		if (name == "Level 1") {
+			ScoreKeeper.ResetScore ();
+		}
 	}
 
 	public void QuitRequest(){
